@@ -1,0 +1,11 @@
+# Ignorar arquivos do Visual Studio e caches locais
+**/[Oo]bj/
+**/[Bb]in/
+**/.vs/
+**/*.user
+
+# Configurações locais
+backend/ConfeitariaWeb/ConfeitariaWeb/appsettings.Development.json
+
+# Configurações locais
+backend/ConfeitariaWeb/appsettings.Development.json

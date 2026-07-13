@@ -1,5 +1,5 @@
 using ConfeitariaWeb.Data;
-using ConfeitariaWeb.Repositories.Interfaces;
+using ConfeitariaWeb.Repositories.Interface;
 
 namespace ConfeitariaWeb.Repositories
 {

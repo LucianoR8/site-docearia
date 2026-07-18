@@ -4,54 +4,44 @@ using Microsoft.EntityFrameworkCore;
 using ConfeitariaWeb.Repositories.Interface;
 using ConfeitariaWeb.DTOs;
 using ConfeitariaWeb.DTOs.Categoria;
+using AutoMapper;
 
 namespace ConfeitariaWeb.Services
 {
     public class CategoriaService : ICategoriaService
     {
         private readonly ICategoriaRepository _categoriaRepository;
+        private readonly IMapper _mapper;
 
-        public CategoriaService(ICategoriaRepository categoriaRepository)
+        public CategoriaService(ICategoriaRepository categoriaRepository, IMapper mapper)
         {
             _categoriaRepository = categoriaRepository;
+            _mapper = mapper;
         }
 
         public async Task<List<CategoriaResponseDto>> ObterTodasAsync()
         {
             var categorias = await _categoriaRepository.ObterTodasAsync();
 
-            return categorias
-                .Select(categoria => new CategoriaResponseDto
-                {
-                    IdCategoria = categoria.IdCategoria,
-                    NomeCategoria = categoria.NomeCategoria
-                })
-                .ToList();
+            return _mapper.Map<List<CategoriaResponseDto>>(categorias);
         }
 
         public async Task<CategoriaResponseDto> AdicionarAsync(CategoriaCreateDto dto)
         {
-          
-            if(dto == null)
-            {
-                throw new ArgumentNullException(nameof(dto));
-            }
 
-            var nomeCategoria = ValidarNomeCategoriaAsync(dto.NomeCategoria);
+            ArgumentNullException.ThrowIfNull(dto);
+            
+            var nomeCategoria = await ValidarNomeCategoriaAsync(dto.NomeCategoria);
 
             var categoria = new Categoria
             {
-                NomeCategoria = dto.NomeCategoria
+                NomeCategoria = nomeCategoria
             };
 
             await _categoriaRepository.AdicionarAsync(categoria);
             await _categoriaRepository.SalvarAlteracoesAsync();
 
-            return new CategoriaResponseDto
-            {
-                IdCategoria = categoria.IdCategoria,
-                NomeCategoria = categoria.NomeCategoria
-            };
+            return _mapper.Map<CategoriaResponseDto>(categoria);
         }
 
         
@@ -64,11 +54,7 @@ namespace ConfeitariaWeb.Services
                 return null;
             }
 
-            return new CategoriaResponseDto
-            {
-                IdCategoria = categoria.IdCategoria,
-                NomeCategoria = categoria.NomeCategoria
-            };
+            return _mapper.Map<CategoriaResponseDto>(categoria);
         }
 
         
@@ -95,11 +81,7 @@ namespace ConfeitariaWeb.Services
             _categoriaRepository.Atualizar(categoria);
             await _categoriaRepository.SalvarAlteracoesAsync();
 
-            return new CategoriaResponseDto
-            {
-                IdCategoria = categoria.IdCategoria,
-                NomeCategoria = categoria.NomeCategoria
-            };
+            return _mapper.Map<CategoriaResponseDto>(categoria);
         }
 
         private async Task<string> ValidarNomeCategoriaAsync(string nomeCategoria, int? ignorarId = null)
@@ -124,12 +106,26 @@ namespace ConfeitariaWeb.Services
             return nomeCategoria;
         }
 
-        /*
-        public Task RemoverAsync(int id)
+        
+        public async Task RemoverAsync(int id)
         {
+            var categoria = await _categoriaRepository.ObterPorIdAsync(id);
 
+            if(categoria == null)
+            {
+                throw new KeyNotFoundException("Categoria não encontrada.");
+            }
+
+            if(await _categoriaRepository.PossuiProdutosAsync(categoria.IdCategoria))
+            {
+                throw new ArgumentException("Essa categoria ainda possui produtos vinculados.");
+            }
+
+            _categoriaRepository.Remover(categoria);
+
+            await _categoriaRepository.SalvarAlteracoesAsync();
         }
-        */
+        
 
 
     }

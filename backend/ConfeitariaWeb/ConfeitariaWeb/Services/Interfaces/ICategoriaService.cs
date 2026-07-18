@@ -11,7 +11,7 @@ namespace ConfeitariaWeb.Services.Interface
         Task<CategoriaResponseDto> AdicionarAsync(CategoriaCreateDto dto);
 
         Task<CategoriaResponseDto> AtualizarAsync(int id, CategoriaUpdateDto dto);
-        // Task RemoverAsync(int id);
+        Task RemoverAsync(int id);
 
     }
 }

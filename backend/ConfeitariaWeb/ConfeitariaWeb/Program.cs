@@ -1,9 +1,12 @@
+using AutoMapper;
 using ConfeitariaWeb.Data;
+using ConfeitariaWeb.Mappings;
 using ConfeitariaWeb.Repositories;
 using ConfeitariaWeb.Repositories.Interface;
 using ConfeitariaWeb.Services;
 using ConfeitariaWeb.Services.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +23,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+var mapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile<CategoriaProfile>();
+}, NullLoggerFactory.Instance);
+
+IMapper mapper = mapperConfig.CreateMapper();
+
+builder.Services.AddSingleton(mapper);
 
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();

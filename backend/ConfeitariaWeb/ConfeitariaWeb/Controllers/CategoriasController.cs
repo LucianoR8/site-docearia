@@ -54,4 +54,11 @@ public class CategoriasController : ControllerBase
         return Ok(categoriaAtualizada);
     }
 
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Remover(int id)
+    {
+        await _categoriaService.RemoverAsync(id);
+
+        return NoContent();
+    }
 }

@@ -1,8 +1,7 @@
 namespace ConfeitariaWeb.DTOs.Configuracao
 {
-    public class ConfiguracaoResponseDto
+    public class ConfiguracaoUpdateDto
     {
-        public int IdConfiguracao { get; set; }
         public string NomeLoja { get; set; } = string.Empty;
         public string? Facebook { get; set; }
         public string? Instagram { get; set; }

@@ -5,6 +5,7 @@ using ConfeitariaWeb.Repositories;
 using ConfeitariaWeb.Repositories.Interface;
 using ConfeitariaWeb.Services;
 using ConfeitariaWeb.Services.Interface;
+using ConfeitariaWeb.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -28,6 +29,7 @@ var mapperConfig = new MapperConfiguration(cfg =>
 {
     cfg.AddProfile<CategoriaProfile>();
     cfg.AddProfile<ProdutoProfile>();
+    cfg.AddProfile<ConfiguracaoProfile>();
 }, NullLoggerFactory.Instance);
 
 IMapper mapper = mapperConfig.CreateMapper();
@@ -36,9 +38,11 @@ builder.Services.AddSingleton(mapper);
 
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<IConfiguracaoRepository, ConfiguracaoRepository>();
 
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddScoped<IConfiguracaoService, ConfiguracaoService>();
 
 var app = builder.Build();
 

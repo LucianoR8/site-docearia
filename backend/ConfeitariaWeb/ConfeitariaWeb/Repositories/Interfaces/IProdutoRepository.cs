@@ -17,7 +17,7 @@ namespace ConfeitariaWeb.Repositories.Interface
 
         Task<bool> CategoriaExisteAsync(int categoriaId);
 
-        Task<int> ObterQuantidadeDestaquesAsync();
+        Task<int> ObterQuantidadeDestaquesAsync(int? ignorarId = null);
 
         Task AdicionarAsync(Produto produto);
 
